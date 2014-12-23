@@ -1,29 +1,30 @@
 @(msg: String)(user: Form[models.request.haikulist.User])(statuses: List[twitter4j.Status])
 
 @import helper._
+@import helper.twitterBootstrap._
 
 @main("Welcome to Play") {
-
-	<h1>Hello!</h1>
-	<p>This is a sample page.</p>
-	<p>@msg</p>
-
-	<table>
-	@for(status <-statuses) {
-		<tr>
-		<td>@status.getUser().getScreenName()</td>
-		<td>@status.getText()</td>
-		</tr>
-	}
-	</table>
-	
-	
-	@form(action = controllers.api.routes.HaikuList.search) {
-
-		@(inputText (
-			field = user("userName")
-		))
+<div class="row">
+	<div class="span3">
+		<h1>Hello!</h1>
+		<p>This is a sample page.</p>
+		<p>@msg</p>
 		
-		<input type="submit" value="送信">
-	}	
+		@form(action = controllers.api.routes.HaikuList.search) {
+			@(inputText (
+				field = user("userName")
+			))
+			<input type="submit" class="btn btn-primary" value="送信">
+		}	
+	</div>
+	<div class="span9">
+		@for(status <-statuses) {
+			<div class="tweet">
+				<div class="content">@status.getUser().getScreenName()</div>
+				<div class="content">@status.getText()</div>
+				<div class="created_at">@status.getCreatedAt()</div>
+			</div>
+		}
+	</div>
+</div>
 }

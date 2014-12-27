@@ -1,10 +1,16 @@
 package controllers.api;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import models.request.haikulist.User;
 import play.*;
 import play.data.Form;
+import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import twitter4j.Query;
@@ -24,46 +30,63 @@ public class HaikuList extends Controller {
 	 * @return
 	 */
     public static Result index() {    	
-    	Form<User> user = new Form(User.class);
-
     	Twitter twitter = TwitterUtil.newTwitter();
 
-    	List<twitter4j.Status> statuses = null;
+    	List<twitter4j.Status> statuses = new ArrayList<>();
     	try {
-	        Query query = new Query("バルス");
+	        Query query = new Query();
+	        query.setQuery("バルス");
+	        query.setLang("ja");
 	        QueryResult result = twitter.search(query);
 	        statuses = result.getTweets();
     	} catch(TwitterException e) {
     		e.printStackTrace();
     	}
 
-    	return ok(views.html.haikulist.index.render("Your new application is ready.", user, statuses));
+    	return ok(views.html.haikulist.index.render("input user name.", statuses));
     }
 
 	/**
 	 * 入力されたユーザ名から575調の tweet を検索する
 	 * @return
 	 */
-    public static Result search() {
+    public static Result myHaiku() {
 
-    	Twitter twitter = TwitterUtil.newTwitter();
-    	
-    	try {
-	        Query query = new Query("source:twitter4j yusukey");
-	        QueryResult result = twitter.search(query);
-	        for (twitter4j.Status status : result.getTweets()) {
-	            System.out.println("@" + status.getUser().getScreenName() + ":" + status.getText());
-	        }
+    	ObjectNode resultJson = Json.newObject();
+
+    	String userName = request().body().asFormUrlEncoded().get("screenName")[0];
+		
+		if (userName.isEmpty()) {
+    		resultJson.put("result", "NG");
+        	return ok(resultJson);
+		}
+
+		try {
+    		// 特定のユーザのツイートを取得する
+	        List<twitter4j.Status> statuses = TwitterUtil.newTwitter().getUserTimeline(userName);
+
+	        // 新しい順に並び替える
+	        Collections.reverse(statuses);
+
+	        List<ObjectNode> tweetList = new ArrayList<>();
+	        statuses.stream().forEach(t ->
+	        	tweetList.add(
+		        	Json.newObject()
+		        		.put("user",t.getUser().getScreenName())
+		        		.put("text", t.getText())
+		        		.put("createdAt", t.getCreatedAt().toString())
+	        	));
+
+	        resultJson.put("tweetList", Json.toJson(tweetList));
+	        resultJson.put("result", "OK");
+	        
     	} catch(TwitterException e) {
     		e.printStackTrace();
+    		resultJson.put("result", "NG");
     	}
-	        
-    	Form<User> user = new Form(User.class).bindFromRequest();
-    	if (!user.hasErrors()) {
-            return ok(views.html.haikulist.index.render("Your new application is ready.", user, null));
-    	} else {
-    		return ok(views.html.haikulist.index.render("入力に問題があります。", user, null));
-    	}
+
+    	return ok(resultJson);
+
     }
 
 }

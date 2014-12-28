@@ -7,9 +7,8 @@ $(function() {
 		}
 		
 		var jsondata = {
-				'screenName' : $("#screenName").val()
 		};
-		$.post("/myHaiku",
+		$.post("/myHaiku/" + $("#screenName").val(),
 			jsondata,
 			function (response) {
 				if (response.result === "OK") {

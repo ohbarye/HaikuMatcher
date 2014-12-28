@@ -7,7 +7,6 @@ import java.util.stream.Stream;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import models.request.haikulist.User;
 import play.*;
 import play.data.Form;
 import play.libs.Json;
@@ -50,20 +49,13 @@ public class HaikuList extends Controller {
 	 * 入力されたユーザ名から575調の tweet を検索する
 	 * @return
 	 */
-    public static Result myHaiku() {
+    public static Result myHaiku(String screenName) {
 
     	ObjectNode resultJson = Json.newObject();
-
-    	String userName = request().body().asFormUrlEncoded().get("screenName")[0];
 		
-		if (userName.isEmpty()) {
-    		resultJson.put("result", "NG");
-        	return ok(resultJson);
-		}
-
 		try {
     		// 特定のユーザのツイートを取得する
-	        List<twitter4j.Status> statuses = TwitterUtil.newTwitter().getUserTimeline(userName);
+	        List<twitter4j.Status> statuses = TwitterUtil.newTwitter().getUserTimeline(screenName);
 
 	        // 新しい順に並び替える
 	        Collections.reverse(statuses);

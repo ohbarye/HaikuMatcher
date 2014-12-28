@@ -1,6 +1,12 @@
 package utils;
 
+import java.util.List;
+
+import twitter4j.Query;
+import twitter4j.QueryResult;
+import twitter4j.Status;
 import twitter4j.Twitter;
+import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
@@ -33,6 +39,29 @@ public class TwitterUtil {
 	 */
 	public static Twitter newTwitter() {
 		return newTwitterFactory().getInstance();
+	}
+
+	/**
+	 * 
+	 * @return
+	 * @throws TwitterException 
+	 */
+	public static List<Status> getUserTimeline(String screenName) throws TwitterException {
+		return newTwitter().getUserTimeline(screenName);
+	}
+
+	/**
+	 * 
+	 * @return
+	 * @throws TwitterException 
+	 */
+	public static QueryResult searchByJa(String queryString) throws TwitterException {
+        Query query = new Query();
+        query.setQuery(queryString);
+        query.setLang("ja");
+        return newTwitter().search(query);
+
+
 	}
 
 }

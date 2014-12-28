@@ -1,48 +1,31 @@
 package controllers.api;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Stream;
+import javax.persistence.Transient;
+
+import models.service.HaikuListService;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import play.*;
-import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
-import twitter4j.Query;
-import twitter4j.QueryResult;
-import twitter4j.Status;
-import twitter4j.Twitter;
 import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
-import twitter4j.conf.ConfigurationBuilder;
 import utils.TwitterUtil;
-import views.html.*;
 
 public class HaikuList extends Controller {
 
+	@Transient
+	private static HaikuListService haikuListService = new HaikuListService();
+	
 	/**
 	 * Top Page
 	 * @return
+	 * @throws TwitterException 
 	 */
-    public static Result index() {    	
-    	Twitter twitter = TwitterUtil.newTwitter();
-
-    	List<twitter4j.Status> statuses = new ArrayList<>();
-    	try {
-	        Query query = new Query();
-	        query.setQuery("バルス");
-	        query.setLang("ja");
-	        QueryResult result = twitter.search(query);
-	        statuses = result.getTweets();
-    	} catch(TwitterException e) {
-    		e.printStackTrace();
-    	}
-
-    	return ok(views.html.haikulist.index.render("input user name.", statuses));
+    public static Result index() throws TwitterException {    	
+    	return ok(views.html.haikulist.index.render(
+    			"ユーザー名を入れてください."
+    			, TwitterUtil.searchByJa("バルス").getTweets()));
     }
 
 	/**
@@ -54,22 +37,8 @@ public class HaikuList extends Controller {
     	ObjectNode resultJson = Json.newObject();
 		
 		try {
-    		// 特定のユーザのツイートを取得する
-	        List<twitter4j.Status> statuses = TwitterUtil.newTwitter().getUserTimeline(screenName);
-
-	        // 新しい順に並び替える
-	        Collections.reverse(statuses);
-
-	        List<ObjectNode> tweetList = new ArrayList<>();
-	        statuses.stream().forEach(t ->
-	        	tweetList.add(
-		        	Json.newObject()
-		        		.put("user",t.getUser().getScreenName())
-		        		.put("text", t.getText())
-		        		.put("createdAt", t.getCreatedAt().toString())
-	        	));
-
-	        resultJson.put("tweetList", Json.toJson(tweetList));
+	        resultJson.put("tweetList",
+	        		Json.toJson(haikuListService.getHaikuTweetList(screenName)));
 	        resultJson.put("result", "OK");
 	        
     	} catch(TwitterException e) {

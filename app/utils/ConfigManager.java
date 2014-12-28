@@ -9,7 +9,7 @@ public class ConfigManager {
 	 * @param key
 	 * @return
 	 */
-	public static String getString(String key) {		
+	public static String getString(String key) {
     	return Play.application()
     			.configuration()
     			.getString(key);

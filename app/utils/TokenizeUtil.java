@@ -47,11 +47,25 @@ public class TokenizeUtil {
 	 * @param sentence
 	 * @return
 	 */
+	public static String scrapeMentionTo(String sentence) {
+		return sentence.replaceAll("@[\\x20-\\x7E]+", "");
+	}
+	
+	/**
+	 * 
+	 * @param sentence
+	 * @return
+	 */
 	public static String scrapeHashTag(String sentence) {
 		return sentence.replaceAll("#.+[ 　]", "");
 	}
 	
+	/**
+	 * 
+	 * @param sentence
+	 * @return
+	 */
 	public static String scrape(String sentence) {
-		return onlyReadableChar(toFullWidth(scrapeUrl(scrapeHashTag(sentence))));
+		return onlyReadableChar(toFullWidth(scrapeUrl(scrapeHashTag(scrapeMentionTo(sentence)))));
 	}
 }

@@ -4,7 +4,7 @@
 
 # Home page
 GET     /							controllers.api.HaikuList.index()
-POST    /myHaiku/:screenName		controllers.api.HaikuList.myHaiku(screenName: String)
+POST    /myHaiku/:key				controllers.api.HaikuList.myHaiku(key: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

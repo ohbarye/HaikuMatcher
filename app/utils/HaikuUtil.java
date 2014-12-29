@@ -1,7 +1,6 @@
 package utils;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.atilika.kuromoji.Token;
 
@@ -34,7 +33,7 @@ public class HaikuUtil {
 	 */
 	public static boolean inHaikuRange(List<Token> tokens) {
         int length =  tokens.stream().mapToInt(s -> getLength(s)).sum();
-        return length == 17;
+        return length >= 17 && length < 20;
 	}
 	
 	/**
@@ -44,10 +43,25 @@ public class HaikuUtil {
 	 */
 	public static int getLength(Token token) {
 		if (token.isKnown()) {
-			return token.getReading().length();
+			return scrapeContractedSound(token.getReading()).length();
 		} else {
-			return token.getSurfaceForm().length();
+			return scrapeContractedSound(token.getSurfaceForm()).length();
 		}
+	}
+
+	/**
+	 * 
+	 * @param token
+	 * @return
+	 */
+	public static String scrapeContractedSound(String str) {
+		return str.replaceAll("[ゃゅょャュョ]", "");
+		}
+
+	public static boolean cannotBeHead(Token token) {
+		return token.getPartOfSpeech().contains("助詞,")
+				|| token.getPartOfSpeech().contains("助動詞,")
+				|| token.getPartOfSpeech().contains("非自立,");
 	}
 
 	/**
@@ -57,33 +71,40 @@ public class HaikuUtil {
 	 */
 	public static boolean isHaikuFormat(List<Token> tokens) {
 		
-		List<Integer> lengthList = tokens.stream()
-				.map(s -> getLength(s))
-				.collect(Collectors.toList());
-		
 		boolean completedKamigo = false;
 		boolean completedNakago = false;
 		boolean completedShimogo = false;
 		
 		int sum = 0;
-		for (Integer count : lengthList) {
-			sum += count;
+		for (Token token : tokens) {
+			if (sum == 0 && token.isKnown() && cannotBeHead(token)) {
+				break;
+			}
 			
-			// 形態素の集合が5音になるか
-			if (!completedKamigo && sum == 5) {
+			sum += getLength(token);
+			
+			// 形態素の集合が5or6音になるか
+			if (!completedKamigo &&
+					(sum == 5 || sum == 6)) {
 				completedKamigo = true;
+				sum = 0;
 			}
-			// 形態素の集合が10音になるか
-			if (!completedNakago && sum == 12) {
+			// 形態素の集合が7or8音になるか
+			if (completedKamigo && !completedNakago &&
+					(sum == 7 || sum == 8)) {
 				completedNakago = true;
+				sum = 0;
 			}
-			// 形態素の集合が17音になるか
-			if (!completedShimogo && sum == 17) {
+			// 形態素の集合が5or6音になるか
+			if (completedKamigo && completedNakago &&
+					!completedShimogo &&
+					(sum == 5 || sum == 6)) {
 				completedShimogo = true;
+				sum = 0;
 			}			
 		}
 		
 		return completedKamigo && completedNakago && completedShimogo;
 	}
-
+	
 }

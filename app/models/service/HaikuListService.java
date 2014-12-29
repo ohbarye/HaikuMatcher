@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import play.libs.Json;
+import twitter4j.Paging;
 import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
@@ -28,43 +29,27 @@ public class HaikuListService {
 	 * @return
 	 * @throws TwitterException
 	 */
-	public List<Status> getHaikuTweetList(List<Status> statuses) throws TwitterException {
-		// 575調の tweet リストを取得する
-		List<Status> haikuTweetList = filter(statuses);
+	public List<ObjectNode> getHaikusJsonByScreenName(String screenName) throws TwitterException {
+        return toJsonObject(getHaikusByScreenName(screenName));	
+	}
+	/**
+	 * 
+	 * @param screenName
+	 * @return
+	 * @throws TwitterException
+	 */
+	public List<ObjectNode> getHaikusJsonByQuery(String query) throws TwitterException {
+        return toJsonObject(getHaikusByQuery(query));	
+	}
 		
-        // 新しい順に並び替える
-        Collections.reverse(haikuTweetList);
-
-        return haikuTweetList;	
-	}
-
-	/**
-	 * 
-	 * @param screenName
-	 * @return
-	 * @throws TwitterException
-	 */
-	public List<ObjectNode> getHaikuTweetListJson(String screenName) throws TwitterException {
-        return toJsonObject(getHaikuTweetList(getTweetList(screenName)));	
-	}
-	
-	/**
-	 * 
-	 * @param screenName
-	 * @return
-	 * @throws TwitterException
-	 */
-	public List<Status> getTweetList(String screenName) throws TwitterException {
-		// 特定のユーザのツイートを取得する
-        return TwitterUtil.getUserTimeline(screenName);
-	}
-	
 	public List<ObjectNode> toJsonObject(List<Status> statuses) {
         List<ObjectNode> tweetList = new ArrayList<>();
         statuses.stream().forEach(t ->
         	tweetList.add(
 	        	Json.newObject()
-	        		.put("user",t.getUser().getScreenName())
+	        		.put("name", t.getUser().getName())
+	        		.put("screenName", t.getUser().getScreenName())
+	        		.put("profileImageUrl", t.getUser().getProfileImageURL())
 	        		.put("text", t.getText())
 	        		.put("createdAt", t.getCreatedAt().toString())
         	));
@@ -93,26 +78,55 @@ public class HaikuListService {
 	 * @return
 	 * @throws TwitterException
 	 */
-	public List<Status> getIndexHaikuTweetList(String key) throws TwitterException {
+	public List<Status> getHaikusByQuery(String key) throws TwitterException {
         Query query = new Query();
         query.setQuery(key);
-        query.setLang("ja");
         query.setCount(100);
 
         List<Status> resultList = new ArrayList<>();
         
         for (int page=0; page < 10; page++) {
         	QueryResult result = TwitterUtil.search(query);
-        	resultList.addAll(getHaikuTweetList(result.getTweets()));
+        	resultList.addAll(filter(result.getTweets()));
         	
         	if (resultList.size() > 5) {
         		break;
         	}
-        	
-        	query = result.nextQuery();
-        }
-        
 
+        	if (result.hasNext())	{
+        		query = result.nextQuery();
+        	} else {
+        		break;
+        	}
+        }
+        // 新しい順に並び替える
+//        Collections.reverse(resultList);
+		return resultList;
+	}
+	
+	/**
+	 * 
+	 * @param screenName
+	 * @return
+	 * @throws TwitterException
+	 */
+	public List<Status> getHaikusByScreenName(String screenName) throws TwitterException {
+		Paging paging = new Paging();
+		paging.setCount(100);
+
+        List<Status> resultList = new ArrayList<>();
+        
+        for (int page=1; page < 10; page++) {
+    		paging.setPage(page);
+        	List<Status> result = TwitterUtil.getUserTimeline(screenName, paging);
+        	resultList.addAll(filter(result));
+        	
+        	if (resultList.size() > 5) {
+        		break;
+        	}
+        }
+        // 新しい順に並び替える
+        Collections.reverse(resultList);
 		return resultList;
 	}
 	

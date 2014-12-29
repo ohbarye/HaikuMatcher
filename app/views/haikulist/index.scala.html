@@ -6,16 +6,20 @@
 @main("Haiku Matcher") {
 <div class="row">
 	<div class="span3">
+		<p>俳句っぽいツイートを検索します。</p>
 		<p id="pronpt">@msg</p>
 		
-		<input type="text" id="screenName" />
+		<div class="col-xs-3">
+			<input type="text" id="key" class="form-control" placeholder="検索したい単語 ユーザー名 etc."/>
+		</div>
 		<input type="button" id="search" class="btn btn-primary search" value="検索">
 
 	</div>
 	<div class="span9 tweetList">
 		@for(status <- statuses) {
 			<div class="tweet">
-				<div class="content">@status.getUser().getScreenName()</div>
+				<div class="content">@status.getUser().getName() @status.getUser().getScreenName()</div>
+				<div class="content"><img src="@status.getUser().getProfileImageURL()" /></div>
 				<div class="content">@status.getText()</div>
 				<div class="created_at">@status.getCreatedAt()</div>
 			</div>

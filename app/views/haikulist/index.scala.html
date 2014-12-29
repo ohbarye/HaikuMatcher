@@ -12,7 +12,12 @@
 		<div class="col-xs-3">
 			<input type="text" id="key" class="form-control" placeholder="検索したい単語 ユーザー名 etc."/>
 		</div>
-		<input type="button" id="search" class="btn btn-primary search" value="検索">
+		<div id="searchbtn">
+			<input type="button" id="search" class="btn btn-primary search" value="検索">
+		</div>
+		<div id="loading">
+			<img src="@routes.Assets.at("images/ajax-loader.gif")" alt="ajax-loader" />
+		</div>
 
 	</div>
 	<div class="span9 tweetList">

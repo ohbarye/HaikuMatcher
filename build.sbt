@@ -10,7 +10,8 @@ libraryDependencies ++= Seq(
   "org.webjars" % "bootstrap" % "3.0.0",
   "org.webjars" %% "webjars-play" % "2.2.0",
   "org.atilika.kuromoji" % "kuromoji" % "0.7.7",
-  "postgresql" % "postgresql" % "9.1-901-1.jdbc4"
+  "postgresql" % "postgresql" % "9.1-901-1.jdbc4",
+  "com.ibm.icu" % "icu4j" % "54.1.1"
 )     
 
 play.Project.playJavaSettings

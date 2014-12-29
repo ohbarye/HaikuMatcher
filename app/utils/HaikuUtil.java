@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.atilika.kuromoji.Token;
-import org.atilika.kuromoji.Tokenizer;
 
 public class HaikuUtil {
 	
@@ -14,11 +13,12 @@ public class HaikuUtil {
 	 * @return
 	 */
 	public static boolean isHaiku(String sentence) {
+		// 宛先を除いた文字列にアルファベットがあれば諦める
+		if (sentence.replaceAll("@[\\x20-\\x7E]+", "").matches(".*[a-zA-Z].*")) {
+			return false;
+		}
 		
-		String trimmed = sentence.replaceAll("[a-zA-z 　@]", "");
-
-		Tokenizer tokenizer = Tokenizer.builder().build();
-        List<Token> tokens = tokenizer.tokenize(trimmed);
+        List<Token> tokens = TokenizeUtil.tokenizeForHaiku(sentence);
 
         if (!inHaikuRange(tokens) || !isHaikuFormat(tokens)) {
         	return false;
@@ -33,14 +33,32 @@ public class HaikuUtil {
 	 * @return
 	 */
 	public static boolean inHaikuRange(List<Token> tokens) {
-        int length =  tokens.stream().mapToInt(s -> s.getReading().length()).sum();
+        int length =  tokens.stream().mapToInt(s -> getLength(s)).sum();
         return length == 17;
 	}
+	
+	/**
+	 * 
+	 * @param token
+	 * @return
+	 */
+	public static int getLength(Token token) {
+		if (token.isKnown()) {
+			return token.getReading().length();
+		} else {
+			return token.getSurfaceForm().length();
+		}
+	}
 
+	/**
+	 * 
+	 * @param tokens
+	 * @return
+	 */
 	public static boolean isHaikuFormat(List<Token> tokens) {
 		
 		List<Integer> lengthList = tokens.stream()
-				.map(s -> s.getReading().length())
+				.map(s -> getLength(s))
 				.collect(Collectors.toList());
 		
 		boolean completedKamigo = false;
@@ -66,7 +84,6 @@ public class HaikuUtil {
 		}
 		
 		return completedKamigo && completedNakago && completedShimogo;
-
 	}
-	
+
 }

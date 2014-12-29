@@ -10,7 +10,6 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import twitter4j.TwitterException;
-import utils.TwitterUtil;
 
 public class HaikuList extends Controller {
 
@@ -22,10 +21,11 @@ public class HaikuList extends Controller {
 	 * @return
 	 * @throws TwitterException 
 	 */
-    public static Result index() throws TwitterException {    	
+    public static Result index() throws TwitterException {
+    	String key = "雨";
     	return ok(views.html.haikulist.index.render(
     			"ユーザー名を入れてください."
-    			, TwitterUtil.searchByJa("バルス").getTweets()));
+    			, haikuListService.getIndexHaikuTweetList(key)));
     }
 
 	/**
@@ -38,7 +38,7 @@ public class HaikuList extends Controller {
 		
 		try {
 	        resultJson.put("tweetList",
-	        		Json.toJson(haikuListService.getHaikuTweetList(screenName)));
+	        		Json.toJson(haikuListService.getHaikuTweetListJson(screenName)));
 	        resultJson.put("result", "OK");
 	        
     	} catch(TwitterException e) {

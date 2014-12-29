@@ -2,6 +2,7 @@ package utils;
 
 import java.util.List;
 
+import twitter4j.Paging;
 import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
@@ -47,7 +48,9 @@ public class TwitterUtil {
 	 * @throws TwitterException 
 	 */
 	public static List<Status> getUserTimeline(String screenName) throws TwitterException {
-		return newTwitter().getUserTimeline(screenName);
+		Paging paging = new Paging();
+		paging.setCount(100);
+		return newTwitter().getUserTimeline(screenName, paging);
 	}
 
 	/**
@@ -55,13 +58,9 @@ public class TwitterUtil {
 	 * @return
 	 * @throws TwitterException 
 	 */
-	public static QueryResult searchByJa(String queryString) throws TwitterException {
-        Query query = new Query();
-        query.setQuery(queryString);
-        query.setLang("ja");
+	public static QueryResult search(Query query) throws TwitterException {
         return newTwitter().search(query);
 
-
 	}
-
+	
 }

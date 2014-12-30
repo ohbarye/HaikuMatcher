@@ -1,5 +1,6 @@
 package utils;
 
+import java.util.Date;
 import java.util.List;
 
 import twitter4j.Paging;
@@ -96,7 +97,30 @@ public class TwitterUtil {
 	 * @throws TwitterException 
 	 */
 	public static boolean existsPublicUser(String screenName) throws TwitterException {
+    	System.out.println("the request key is リクエストされたキーは  " + screenName);
+    	System.out.println("current time is 現在の日付は  "  + new Date());
+
         return exists(screenName) && isPublicUser(twitter.showUser(screenName));
 	}
 
+	public static void main(String[] args) throws TwitterException {
+		twitter = new TwitterFactory( new ConfigurationBuilder()
+		.setDebugEnabled(true)
+		.setOAuthConsumerKey("8eTOF1ezXfib0iDmwcQKY1EG7")
+		.setOAuthConsumerSecret("pgjDF0y1ApK4H8SCTRzVTFqtaQtUwPKQVVa0A0WqSNnFlU4JhE")
+		.setOAuthAccessToken("126524303-qABwiQiwPkUeOuaZP8SO5UiOyST4XYLu6TodOG8F")
+		.setOAuthAccessTokenSecret("HBp1tUErXTAh9M8gefr41pCiEwtcCYgWkh0UEnsnKY2Yg").build())
+		.getInstance()
+		;
+
+		
+		String key = "%E6%AD%A3%E6%9C%88";
+        try {
+        	System.out.println(exists(key) && isPublicUser(twitter.showUser(key)));
+        } catch (Exception e) {
+        	e.printStackTrace();
+        }
+	}
+	
+	
 }

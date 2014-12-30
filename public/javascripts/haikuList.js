@@ -12,8 +12,7 @@ $(function() {
 
 		$.ajax({
 			type: "POST",
-			url : "/myHaiku/",
-			data : {'input' : key},
+			url : "/myHaiku/" + key,
 			success : function(response) {
 				setHaikus(response);
 			},
@@ -21,14 +20,6 @@ $(function() {
 				hideLoadingImage();
 			}
 		})
-/*		$.post("/myHaiku/" + key,
-			jsondata,
-			function (response) {
-				setHaikus(response);
-			},
-			"json"
-		);
-*/
 	})
 	
 	function setHaikus(response) {

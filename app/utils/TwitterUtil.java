@@ -96,11 +96,27 @@ public class TwitterUtil {
 	 * @return
 	 * @throws TwitterException 
 	 */
-	public static boolean existsPublicUser(String screenName) throws TwitterException {
+	public static boolean existsPublicUser(String screenName) {
     	System.out.println("the request key is リクエストされたキーは  " + screenName);
-    	System.out.println("current time is 現在の日付は  "  + new Date());
 
-        return exists(screenName) && isPublicUser(twitter.showUser(screenName));
+    	boolean exists = false;
+    	boolean isPublic = false;
+    	
+    	try {
+    		System.out.println("ユーザーが存在するか確認します。check existence: " + screenName);
+    		exists = exists(screenName);
+    		System.out.println("ユーザーが存在するか確認しました。checked existence: " + exists);
+    		
+    		if (exists) {
+	    		System.out.println("ユーザーが鍵か確認します。check is public: " + isPublic);
+	    		isPublic = isPublicUser(twitter.showUser(screenName));
+	    		System.out.println("ユーザーが鍵か確認しました。checked is public: " + isPublic);
+    		}
+    	} catch (TwitterException te) {
+    		te.printStackTrace();
+    	}
+    	
+    	return exists && isPublic;
 	}
 
 	public static void main(String[] args) throws TwitterException {

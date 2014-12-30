@@ -1,5 +1,8 @@
 package controllers.api;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
 import javax.persistence.Transient;
 
 import models.service.HaikuListService;
@@ -32,10 +35,11 @@ public class HaikuList extends Controller {
 	/**
 	 * 入力されたユーザ名または単語から575調の tweet を検索する
 	 * @return
+	 * @throws UnsupportedEncodingException 
 	 */
-    public static Result myHaiku(String key) {
+    public static Result myHaiku(String key) throws UnsupportedEncodingException {
     	
-    	System.out.println(key);
+    	System.out.println("リクエストされたキーは  " + URLDecoder.decode(key,"UTF-8"));
 
     	ObjectNode resultJson = Json.newObject();
 		

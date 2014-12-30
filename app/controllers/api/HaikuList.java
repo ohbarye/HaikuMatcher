@@ -34,6 +34,8 @@ public class HaikuList extends Controller {
 	 * @return
 	 */
     public static Result myHaiku(String key) {
+    	
+    	System.out.println(key);
 
     	ObjectNode resultJson = Json.newObject();
 		

@@ -12,7 +12,8 @@ $(function() {
 
 		$.ajax({
 			type: "POST",
-			url : "/myHaiku/" + key,
+			url : "/myHaiku/",
+			data : {'input' : key},
 			success : function(response) {
 				setHaikus(response);
 			},

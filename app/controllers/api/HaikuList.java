@@ -37,9 +37,10 @@ public class HaikuList extends Controller {
 	 * @return
 	 * @throws UnsupportedEncodingException 
 	 */
-    public static Result myHaiku(String key) throws UnsupportedEncodingException {
+    public static Result myHaiku() throws UnsupportedEncodingException {
     	
-    	System.out.println("リクエストされたキーは  " + URLDecoder.decode(key,"UTF-8"));
+    	String key = request().body().asFormUrlEncoded().get("input")[0];
+    	System.out.println("the request key is リクエストされたキーは  " + URLDecoder.decode(key,"UTF-8"));
 
     	ObjectNode resultJson = Json.newObject();
 		

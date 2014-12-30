@@ -2,6 +2,7 @@ package controllers.api;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Date;
 
 import javax.persistence.Transient;
 
@@ -41,6 +42,7 @@ public class HaikuList extends Controller {
     	
     	String key = request().body().asFormUrlEncoded().get("input")[0];
     	System.out.println("the request key is リクエストされたキーは  " + URLDecoder.decode(key,"UTF-8"));
+    	System.out.println("current time is 現在の日付は  "  + new Date());
 
     	ObjectNode resultJson = Json.newObject();
 		

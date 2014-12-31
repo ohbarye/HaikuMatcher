@@ -4,30 +4,32 @@
 @import helper.twitterBootstrap._
 
 @main("Haiku Matcher") {
-<div class="row">
-	<div class="span3">
+<div>
+	<div class="content">
 		<p>俳句っぽいツイートを検索します。</p>
 		<p id="pronpt">@msg</p>
 		
-		<div class="col-xs-3">
-			<input type="text" id="key" class="form-control" placeholder="検索したい単語 ユーザー名 etc."/>
-		</div>
-		<div id="searchbtn">
-			<input type="button" id="search" class="btn btn-primary search" value="検索">
-		</div>
-		<div id="loading" style="display: none;">
-			<img src="@routes.Assets.at("images/ajax-loader.gif")" alt="ajax-loader" />
-		</div>
-
-	</div>
-	<div class="span9 tweetList">
-		@for(status <- statuses) {
-			<div class="tweet">
-				<div class="content">@status.getUser().getName() @status.getUser().getScreenName()</div>
-				<div class="content"><img src="@status.getUser().getProfileImageURL()" /></div>
-				<div class="content">@status.getText()</div>
-				<div class="created_at">@status.getCreatedAt()</div>
+		<div class="input-area row">
+			<div class="col-xs-9 col-md-8">
+				<input type="text" id="key" class="form-control" placeholder="検索したい単語 ユーザー名 etc."/>
 			</div>
+			<div class="col-xs-3 col-md-4">
+				<div id="searchbtn"><input type="button" id="search" class="btn btn-primary search" value="検索"></div>
+				<div id="loading" style="display: none;"><img src="@routes.Assets.at("images/ajax-loader.gif")" alt="ajax-loader" /></div>
+			</div>
+		</div>
+	</div>
+	<div class="tweetList">
+		@for(status <- statuses) {
+					<div class="tweet row">
+						<div class="col-xs-2 col-sm-1 col-md-1"><img src="@status.getUser().getProfileImageURL()" /></div>
+						<div class="col-xs-10 col-sm-11 col-md-11">
+							<div><span class="userName">@status.getUser().getName()</span>
+								 <span class="screenName">@@@status.getUser().getScreenName()</span></div>
+							<div>@status.getText()</div>
+							<div class="created_at">@status.getCreatedAt()</div>
+						</div>
+					</div>
 		}
 	</div>
 </div>

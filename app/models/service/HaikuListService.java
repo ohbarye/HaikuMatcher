@@ -121,7 +121,7 @@ public class HaikuListService {
         	List<Status> result = TwitterUtil.getUserTimeline(screenName, paging);
         	resultList.addAll(filter(result));
         	
-        	if (resultList.size() > 5) {
+        	if (resultList.size() > 10) {
         		break;
         	}
         }

@@ -28,11 +28,14 @@ $(function() {
 			if (response.tweetList.length > 0) {
 				$(response.tweetList).each(function() {
 					$(".tweetList").prepend(
-						'<div class="tweet">' + 
-							'<div class="content">' + this.name + ' ' + this.screenName + '</div>' +
-							'<div class="content">' + '<img src="' + this.profileImageUrl + '" />' + '</div>' +
-							'<div class="content">' + this.text + '</div>' +
-							'<div class="created_at">' + this.createdAt + '</div>' + 
+						'<div class="tweet row">' + 
+							'<div class="col-xs-2 col-sm-1 col-md-1">' + '<img src="' + this.profileImageUrl + '" />' + '</div>' +
+							'<div class="col-xs-10 col-sm-11 col-md-11">' + 
+								'<div><span class="userName">' + this.name + '</span>' +
+									' <span class="screenName">@' + this.screenName + '</span></div>' +
+								'<div>' + this.text + '</div>' +
+								'<div class="created_at">' + this.createdAt + '</div>' + 
+							'</div>' +
 						'</div>'
 					);
 				})

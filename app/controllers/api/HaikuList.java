@@ -25,7 +25,7 @@ public class HaikuList extends Controller {
     public static Result index() throws TwitterException {
     	String key = "俳句";
     	return ok(views.html.haikulist.index.render(
-    			"575調に近い文章を検索して表示します。判定はわりと雑です。"
+    			"575調に近い文章を検索して表示します。判定はわりとてきとうです。"
     			, haikuListService.getHaikusByQuery(key)));
     }
 

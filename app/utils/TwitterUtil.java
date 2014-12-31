@@ -11,12 +11,17 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
+/**
+ * Twitter API 関連のユーティリティークラス
+ * @author ohbarye
+ */
 public class TwitterUtil {
 
+	// Twitter インスタンスを生成しておく
 	private static Twitter twitter = newTwitter();
 
 	/**
-	 * 設定ファイル情報を読み込んだ ConfigurationBuilder インスタンスを取得する
+	 * 設定ファイル情報を読み込んだ ConfigurationBuilder インスタンスを取得する。
 	 * @return
 	 */
 	public static ConfigurationBuilder buildConfig() {
@@ -29,7 +34,7 @@ public class TwitterUtil {
 	}
 
 	/**
-	 * 設定ファイル情報を読み込んだ TwitterFactory インスタンスを取得する
+	 * 設定ファイル情報を読み込んだ TwitterFactory インスタンスを取得する。
 	 * @return
 	 */
 	public static TwitterFactory newTwitterFactory() {
@@ -37,7 +42,7 @@ public class TwitterUtil {
 	}
 
 	/**
-	 * 設定ファイル情報を読み込んだ Twitter インスタンスを取得する
+	 * 設定ファイル情報を読み込んだ Twitter インスタンスを取得する。
 	 * @return
 	 */
 	public static Twitter newTwitter() {
@@ -45,7 +50,7 @@ public class TwitterUtil {
 	}
 
 	/**
-	 * 
+	 * 指定したユーザのタイムラインを取得する。
 	 * @return
 	 * @throws TwitterException 
 	 */
@@ -54,7 +59,7 @@ public class TwitterUtil {
 	}
 
 	/**
-	 * 
+	 * 指定した検索条件でツイートを検索する。
 	 * @return
 	 * @throws TwitterException 
 	 */
@@ -64,14 +69,15 @@ public class TwitterUtil {
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * ユーザが存在するかどうかを判定する。
+	 * @return ユーザが存在するか
 	 * @throws TwitterException 
 	 */
 	public static boolean exists(String screenName) throws TwitterException {
         try {
         	twitter.showUser(screenName);
         } catch(TwitterException te) {
+        	// 404 の場合はユーザ不在
         	if (te.getStatusCode() == 404) {
         		return false;
         	} else if (te.getStatusCode() == 401) {
@@ -83,9 +89,10 @@ public class TwitterUtil {
         }
         return true;
 	}
+	
 	/**
-	 * 
-	 * @return
+	 * 引数の screenName を持つユーザが公開ユーザかどうかを判定する。
+	 * @return ユーザが公開ユーザかどうか
 	 * @throws TwitterException 
 	 */
 	public static boolean isPublicUser(String screenName) throws TwitterException {
@@ -98,8 +105,8 @@ public class TwitterUtil {
 	}
 
 	/**
-	 * 
-	 * @return
+	 * 引数の screenName を持つ公開ユーザが存在するか判定する。
+	 * @return 公開ユーザが存在するか
 	 * @throws TwitterException 
 	 */
 	public static boolean existsPublicUser(String screenName) throws TwitterException {

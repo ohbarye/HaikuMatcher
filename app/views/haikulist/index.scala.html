@@ -5,8 +5,10 @@
 
 @main("Haiku Matcher") {
 <div>
+
+	@* 検索条件入力部 *@
 	<div class="content">
-		<p>俳句っぽいツイートを検索します。</p>
+		<p>575調に近いツイートを検索して表示します。</p>
 		<p id="pronpt">@msg</p>
 		
 		<div class="input-area row">
@@ -19,6 +21,8 @@
 			</div>
 		</div>
 	</div>
+	
+	@* 検索結果表示部 *@
 	<div class="tweetList">
 		@for(status <- statuses) {
 					<div class="tweet row">

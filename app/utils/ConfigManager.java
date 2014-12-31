@@ -2,12 +2,16 @@ package utils;
 
 import play.Play;
 
+/**
+ * アプリケーションの設定情報を扱うクラス
+ * @author ohbarye
+ */
 public class ConfigManager {
 
 	/**
 	 * 設定ファイルから値を取得する。
 	 * @param key
-	 * @return
+	 * @return 
 	 */
 	public static String getString(String key) {
     	return Play.application()

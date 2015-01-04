@@ -11,7 +11,8 @@ libraryDependencies ++= Seq(
   "org.webjars" %% "webjars-play" % "2.2.0",
   "org.atilika.kuromoji" % "kuromoji" % "0.7.7",
   "postgresql" % "postgresql" % "9.1-901-1.jdbc4",
-  "com.ibm.icu" % "icu4j" % "54.1.1"
+  "com.ibm.icu" % "icu4j" % "54.1.1",
+  "com.newrelic.agent.java" % "newrelic-agent" % "3.7.0"
 )     
 
 play.Project.playJavaSettings

@@ -12,7 +12,7 @@ libraryDependencies ++= Seq(
   "org.atilika.kuromoji" % "kuromoji" % "0.7.7",
   "postgresql" % "postgresql" % "9.1-901-1.jdbc4",
   "com.ibm.icu" % "icu4j" % "54.1.1",
-  "com.newrelic.agent.java" % "newrelic-agent" % "2.21.0"
+  "com.newrelic.agent.java" % "newrelic-agent" % "3.1.0"
 )     
 
 play.Project.playJavaSettings

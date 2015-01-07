@@ -1,1 +1,1 @@
-web: target/universal/stage/bin/haikumatcher -Dhttp.port=${PORT} -DapplyEvolutions.default=true -Ddb.default.url=${DATABASE_URL} -Ddb.default.driver=org.postgresql.Driver {$JAVA_OPTS}
+web: target/universal/stage/bin/haikumatcher -Dhttp.port=${PORT} -DapplyEvolutions.default=true -Ddb.default.url=${DATABASE_URL} -Ddb.default.driver=org.postgresql.Driver -J-javaagent:lib/newrelic.jar {$JAVA_OPTS}

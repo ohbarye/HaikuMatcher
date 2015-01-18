@@ -59,4 +59,8 @@ public class HaikuList extends Controller {
 
     	return ok(resultJson);
     }
+    
+    public static Result alive() {
+    	return ok("true");
+    }
 }

@@ -11,6 +11,7 @@ import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
 import twitter4j.TwitterException;
+import utils.ConfigManager;
 import utils.HaikuUtil;
 import utils.TwitterUtil;
 
@@ -22,8 +23,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  */
 public class HaikuListService {
 	
-	// リトライ回数
-	private static final int RETRY_TIMES = 10;
+	/** リトライ回数 */
+	private static final int RETRY_TIMES = ConfigManager.getInt("retry.times");
+	/** 最低取得件数 */
+	private static final int MINIMUM_REQUIRED = ConfigManager.getInt("minimun.required");
 
 	/**
 	 * 俳句っぽいツイートを検索する。
@@ -95,7 +98,7 @@ public class HaikuListService {
         	resultList.addAll(filter(result.getTweets()));
         	
         	// 5件以上取得できたら終了する
-        	if (resultList.size() >= 5) {
+        	if (resultList.size() >= MINIMUM_REQUIRED) {
         		break;
         	}
         	// 検索結果が無くなったら終了する
@@ -130,8 +133,8 @@ public class HaikuListService {
         	// 俳句っぽいツイートだけを抽出してリストに追加
         	resultList.addAll(filter(result));
         	
-        	// 10件以上取得できたら終了する
-        	if (resultList.size() >= 10) {
+        	// 5件以上取得できたら終了する
+        	if (resultList.size() >= MINIMUM_REQUIRED) {
         		break;
         	}
         }
